@@ -3,6 +3,7 @@ import { MdLock } from 'react-icons/md';
 import { useForm } from 'react-hook-form';
 
 import registerLogo from '../assets/register.png';
+import {toast} from "react-toastify";
 
 export default function Register() {
 
@@ -26,12 +27,11 @@ export default function Register() {
         const responseData = await response.json()
 
         if (response.ok) {
-            alert('Conta criada com sucesso!')
+            toast.success('Conta criada com sucesso!')
             reset()
         } else {
             if (responseData.detail)
                 alert(responseData.detail)
-            console.log(responseData)
         }
     }
 
