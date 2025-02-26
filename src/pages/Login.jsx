@@ -1,35 +1,27 @@
 import 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { MdLock } from "react-icons/md";
-import { FiAtSign } from "react-icons/fi";
-import loginLogo from '../assets/login.png';
 import useAuth from "../hooks/useAuth.js";
+import {toast} from "react-toastify";
+import api from "../api.js";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { login } = useAuth()
+  const navigate = useNavigate()
 
   const onSubmit = async (data) => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-
-    const responseData = await response.json()
-
-    if (response.ok) {
-      login(responseData.token)
-    } else {
-      if (responseData.detail)
-        alert(responseData.detail)
-      console.log(responseData)
-      errors.email = { message: responseData.message }
-    }
+    api.post('/v1/auth/login', data)
+        .then(response => {
+          toast('Login efetuado com sucesso!')
+          login(response.data.token, response.data.user)
+          navigate('/')
+        })
+        .catch(error => {
+          if (error.response.data.detail)
+              toast.error(error.response.data.detail)
+        })
   }
 
   return (
@@ -47,6 +39,7 @@ export default function Login() {
                  placeholder="nome@email.com"
                  {...register('email', {required: 'Campo obrigatório'})}
           />
+          {errors.email && <p className="text-red-500 text-sm font-semibold mt-1">{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">
@@ -56,6 +49,7 @@ export default function Login() {
                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                  {...register('password', {required: 'Campo obrigatório'})}
           />
+          {errors.password && <p className="text-red-500 text-sm font-semibold mt-1">{errors.password.message}</p>}
         </div>
         <div className="flex items-start">
           <a href="#" className="ms-auto text-sm text-blue-700 hover:underline">
