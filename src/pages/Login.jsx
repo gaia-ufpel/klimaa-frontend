@@ -2,11 +2,9 @@ import 'react';
 import {Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import { MdLock } from "react-icons/md";
-import { FiAtSign } from "react-icons/fi";
-import loginLogo from '../assets/login.png';
 import useAuth from "../hooks/useAuth.js";
 import {toast} from "react-toastify";
+import api from "../api.js";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -14,27 +12,16 @@ export default function Login() {
   const navigate = useNavigate()
 
   const onSubmit = async (data) => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-
-    const responseData = await response.json()
-
-    if (response.ok) {
-      toast.success('Login efetuado com sucesso!')
-      login(responseData.token, responseData.user)
-      navigate('/')
-    } else {
-      if (responseData.detail)
-        toast.error(responseData.detail)
-
-      errors.email = { message: responseData.message }
-      errors.password = { message: responseData.message}
-    }
+    api.post('/v1/auth/login', data)
+        .then(response => {
+          toast('Login efetuado com sucesso!')
+          login(response.data.token, response.data.user)
+          navigate('/')
+        })
+        .catch(error => {
+          if (error.response.data.detail)
+              toast.error(error.response.data.detail)
+        })
   }
 
   return (
