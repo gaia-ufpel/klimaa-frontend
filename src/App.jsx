@@ -10,6 +10,7 @@ import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ServerError from "./pages/ServerError.jsx";
+import About from "./pages/About.jsx";
 
 function App() {
     return (
@@ -18,8 +19,9 @@ function App() {
                 <Routes>
                     <Route path="login" element={<Login/>} />
                     <Route path="register" element={<Register/>} />
+                    <Route path="about" element={<About/>} />
                     <Route path="/" element={<Home/>} />
-                    <Route path="/server-error" element={<ServerError/>} />
+                    <Route path="server-error" element={<ServerError/>} />
                     <Route path="*" element={<NotFound/>} />
                 </Routes>
             </BrowserRouter>

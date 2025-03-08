@@ -42,11 +42,11 @@ export default function Home() {
                 { loading && <h2 className="text-xl font-semibold">Carregando...</h2> }
                 {!loading && locations.map((location) => (
                     <section className="flex flex-col space-y-4" key={location.id}>
-                        <h1 className="text-gray-800 text-2xl">{location.campus} - {location.building} - {location.room}</h1>
+                        <h1 className="text-gray-800 text-2xl capitalize">{location.campus} - {location.building} - {location.room}</h1>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {metricTypes.map((metricType) => (
                                 <div key={metricType.id} className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-                                    <h3>{metricType.name}</h3>
+                                    <h3 className="capitalize">{metricType.name}</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <MetricCard
                                             metrics={metrics.filter((metric) => metric.metric_type_id === metricType.id && metric.location_id === location.id).map((metric) => {
